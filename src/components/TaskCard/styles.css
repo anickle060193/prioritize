@@ -1,0 +1,8 @@
+.task
+{
+    display: inline-block;
+    width: 20rem;
+    height: 20rem;
+    margin: 1rem;
+    vertical-align: top
+}

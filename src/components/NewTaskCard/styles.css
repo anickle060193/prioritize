@@ -1,0 +1,13 @@
+.new-task
+{
+    display: inline-block;
+    width: 20rem;
+    height: 20rem;
+    margin: 1rem;
+    vertical-align: top
+}
+
+.new-task-form
+{
+    padding: 0 2rem;
+}

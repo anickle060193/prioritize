@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Grid, Row } from 'react-bootstrap';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import darkBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
 import './App.css';
 
@@ -10,11 +12,9 @@ export default class App extends React.Component
     render()
     {
         return (
-            <Grid>
-                <Row>
-                    <TaskQueue />
-                </Row>
-            </Grid>
+            <MuiThemeProvider muiTheme={getMuiTheme( darkBaseTheme )}>
+                <TaskQueue />
+            </MuiThemeProvider>
         );
     }
 }
