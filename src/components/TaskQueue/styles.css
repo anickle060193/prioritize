@@ -1,9 +1,10 @@
 .task-queue
 {
-    position: relative;
-    width: 100%;
     padding: 1rem;
     padding-bottom: 5rem;
+    display: flex;
+    flex: auto;
+    flex-wrap: nowrap;
 }
 
 .new-task-button

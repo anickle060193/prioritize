@@ -1,10 +1,11 @@
 .new-task
 {
-    display: inline-block;
+    display: inline-flex;
+    flex-shrink: 0;
     width: 20rem;
     height: 20rem;
     margin: 1rem;
-    vertical-align: top
+    vertical-align: top;
 }
 
 .new-task-form

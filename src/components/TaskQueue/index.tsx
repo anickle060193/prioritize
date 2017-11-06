@@ -1,11 +1,11 @@
 import * as React from 'react';
-//import FloatingActionButton from 'material-ui/FloatingActionButton';
-//import FontIcon from 'material-ui/FontIcon';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon';
 import { DragDropContext, DragStart, DropResult, Droppable, DroppableProvided, Draggable } from 'react-beautiful-dnd';
 
 import './styles.css';
 
-//import NewTaskCard from 'components/NewTaskCard';
+import NewTaskCard from 'components/NewTaskCard';
 import TaskCard from 'components/TaskCard';
 
 import Task from 'utilities/task';
@@ -47,21 +47,40 @@ export default class TaskQueue extends React.Component<Props, State>
     render()
     {
         return (
-            <DragDropContext
-                onDragStart={( dragStart ) => this.onDragStart( dragStart )}
-                onDragEnd={( result ) => this.onDragEnd( result )}
-            >
-                <Droppable droppableId="task_queue" direction="horizontal">
-                    {
-                        ( dropProvided, dropSnapshot ) =>
-                        (
-                            <div className="task-queue-wrapper">
-                                {this.renderList( dropProvided )}
-                            </div>
-                        )
-                    }
-                </Droppable>
-            </DragDropContext>
+            <div className="task-queue">
+                {
+                    this.state.creating ?
+                        <NewTaskCard
+                            onCancel={() => this.onTaskCreateCancel()}
+                            onTaskCreate={( newTask ) => this.onTaskCreate( newTask )}
+                        />
+                    : null
+                }
+
+                <DragDropContext
+                    onDragStart={( dragStart ) => this.onDragStart( dragStart )}
+                    onDragEnd={( result ) => this.onDragEnd( result )}
+                >
+                    <Droppable droppableId="task_queue" direction="horizontal">
+                        {
+                            ( dropProvided, dropSnapshot ) =>
+                            (
+                                <div className="task-queue-wrapper">
+                                    {this.renderList( dropProvided )}
+                                </div>
+                            )
+                        }
+                    </Droppable>
+                </DragDropContext>
+
+                <FloatingActionButton
+                    className="new-task-button"
+                    onClick={() => this.setState( { creating: true } )}
+                    onTouchTap={() => this.setState( { creating: true } )}
+                >
+                    <FontIcon className="material-icons">add</FontIcon>
+                </FloatingActionButton>
+            </div>
         );
     }
 
@@ -101,7 +120,6 @@ export default class TaskQueue extends React.Component<Props, State>
     }
     */
 
-    /*
     private onTaskCreateCancel()
     {
         this.setState( { creating: false } );
@@ -120,7 +138,6 @@ export default class TaskQueue extends React.Component<Props, State>
             };
         } );
     }
-    */
 
     private onDragStart( dragStart: DragStart )
     {
