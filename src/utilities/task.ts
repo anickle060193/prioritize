@@ -7,7 +7,7 @@ export default class Task
 {
     public readonly name: string;
     public readonly description: string;
-    private readonly id: string;
+    public readonly id: string;
 
     static load( id: string )
     {

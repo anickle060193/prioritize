@@ -13,3 +13,24 @@
     right: 1.5rem;
     transform: translateX( -50% );
 }
+
+.wrapper
+{
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+
+.drop-zone
+{
+    min-width: 600px;
+    display: flex;
+}
+
+.container
+{
+    flex-grow: 1;
+
+    display: inline-flex;
+    flex-direction: column;
+}

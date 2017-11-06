@@ -1,10 +1,11 @@
 import * as React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import FontIcon from 'material-ui/FontIcon';
+//import FloatingActionButton from 'material-ui/FloatingActionButton';
+//import FontIcon from 'material-ui/FontIcon';
+import { DragDropContext, DragStart, DropResult, Droppable, DroppableProvided, Draggable } from 'react-beautiful-dnd';
 
 import './styles.css';
 
-import NewTaskCard from 'components/NewTaskCard';
+//import NewTaskCard from 'components/NewTaskCard';
 import TaskCard from 'components/TaskCard';
 
 import Task from 'utilities/task';
@@ -41,30 +42,47 @@ export default class TaskQueue extends React.Component<Props, State>
     render()
     {
         return (
-            <div className="task-queue">
-                {
-                    this.state.creating ?
-                        <NewTaskCard
-                            onCancel={() => this.onTaskCreateCancel()}
-                            onTaskCreate={( newTask ) => this.onTaskCreate( newTask )}
-                        />
-                    : null
-                }
+            <DragDropContext
+                onDragStart={( dragStart ) => this.onDragStart( dragStart )}
+                onDragEnd={( result ) => this.onDragEnd( result )}
+            >
+                <Droppable droppableId="task_queue" direction="horizontal">
+                    {
+                        ( dropProvided, dropSnapshot ) =>
+                        (
+                            <div className="wrapper">
+                                {this.renderList( dropProvided )}
+                            </div>
+                        )
+                    }
+                </Droppable>
+            </DragDropContext>
+        );
+    }
 
-                {
-                    this.state.tasks.map( ( task ) =>
-                    (
-                        <TaskCard key={JSON.stringify( task )} task={task} />
-                    ) )
-                }
-
-                <FloatingActionButton
-                    className="new-task-button"
-                    onClick={() => this.setState( { creating: true } )}
-                    onTouchTap={() => this.setState( { creating: true } )}
-                >
-                    <FontIcon className="material-icons">add</FontIcon>
-                </FloatingActionButton>
+    private renderList( dropProvided: DroppableProvided )
+    {
+        return (
+            <div className="container">
+                <div className="drop-zone" ref={dropProvided.innerRef}>
+                    {
+                        this.state.tasks.map( ( task ) =>
+                        (
+                            <Draggable key={task.id} draggableId={task.id}>
+                                {
+                                    ( dragProvided, dragSnapshot ) =>
+                                    (
+                                        <div>
+                                            <TaskCard task={task} provided={dragProvided} snapshot={dragSnapshot} />
+                                            {dragProvided.placeholder}
+                                        </div>
+                                    )
+                                }
+                            </Draggable>
+                        ) )
+                    }
+                    {dropProvided.placeholder}
+                </div>
             </div>
         );
     }
@@ -81,6 +99,7 @@ export default class TaskQueue extends React.Component<Props, State>
         } );
     }
 
+    /*
     private onTaskCreateCancel()
     {
         this.setState( { creating: false } );
@@ -98,5 +117,29 @@ export default class TaskQueue extends React.Component<Props, State>
                 creating: false
             };
         } );
+    }
+    */
+
+    private onDragStart( dragStart: DragStart )
+    {
+
+    }
+
+    private onDragEnd( result: DropResult )
+    {
+        if( !result.destination )
+        {
+            return;
+        }
+
+        this.reorderTasks( result.source.index, result.destination.index );
+    }
+
+    private reorderTasks( startIndex: number, endIndex: number )
+    {
+        let tasks = this.state.tasks;
+        let [ removed ] = tasks.splice( startIndex, 1 );
+        tasks.splice( endIndex, 0, removed );
+        this.setState( { tasks } );
     }
 }
