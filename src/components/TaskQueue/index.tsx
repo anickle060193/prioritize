@@ -6,7 +6,7 @@ import { DragDropContext, DragStart, DropResult, Droppable, DroppableProvided, D
 import './styles.css';
 
 import NewTaskCard from 'components/NewTaskCard';
-import TaskCard from 'components/TaskCard';
+import DraggableTaskCard from 'components/DraggableTaskCard';
 
 import Task from 'utilities/task';
 
@@ -99,7 +99,7 @@ export default class TaskQueue extends React.Component<Props, State>
                                     ( dragProvided, dragSnapshot ) =>
                                     (
                                         <div>
-                                            <TaskCard task={task} provided={dragProvided} snapshot={dragSnapshot} />
+                                            <DraggableTaskCard task={task} provided={dragProvided} snapshot={dragSnapshot} />
                                             {dragProvided.placeholder}
                                         </div>
                                     )
