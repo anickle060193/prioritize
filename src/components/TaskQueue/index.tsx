@@ -32,16 +32,18 @@ export default class TaskQueue extends React.Component<Props, State>
             creating: tasks.length === 0,
             tasks: tasks
         };
+
+        this.onStorageChange = this.onStorageChange.bind( this );
     }
 
     componentWillMount()
     {
-        // window.addEventListener( 'storage', ( e ) => this.onStorageChange( e ) );
+        window.addEventListener( 'storage', this.onStorageChange );
     }
 
     componentWillUnmount()
     {
-        // window.removeEventListener( 'storage' );
+        window.removeEventListener( 'storage', this.onStorageChange );
     }
 
     render()
@@ -111,14 +113,12 @@ export default class TaskQueue extends React.Component<Props, State>
         );
     }
 
-    /*
     private onStorageChange( e: StorageEvent )
     {
         this.setState( {
             tasks: Task.getTasks()
         } );
     }
-    */
 
     private onTaskCreateCancel()
     {
