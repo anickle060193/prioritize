@@ -36,7 +36,12 @@ export default class TaskQueue extends React.Component<Props, State>
 
     componentWillMount()
     {
-        window.addEventListener( 'storage', ( e ) => this.onStorageChange( e ) );
+        // window.addEventListener( 'storage', ( e ) => this.onStorageChange( e ) );
+    }
+
+    componentWillUnmount()
+    {
+        // window.removeEventListener( 'storage' );
     }
 
     render()
@@ -50,7 +55,7 @@ export default class TaskQueue extends React.Component<Props, State>
                     {
                         ( dropProvided, dropSnapshot ) =>
                         (
-                            <div className="wrapper">
+                            <div className="task-queue-wrapper">
                                 {this.renderList( dropProvided )}
                             </div>
                         )
@@ -63,8 +68,8 @@ export default class TaskQueue extends React.Component<Props, State>
     private renderList( dropProvided: DroppableProvided )
     {
         return (
-            <div className="container">
-                <div className="drop-zone" ref={dropProvided.innerRef}>
+            <div className="task-queue-container">
+                <div className="task-queue-drop-zone" ref={dropProvided.innerRef}>
                     {
                         this.state.tasks.map( ( task ) =>
                         (
@@ -87,17 +92,14 @@ export default class TaskQueue extends React.Component<Props, State>
         );
     }
 
-    componentWillUnmount()
-    {
-        window.removeEventListener( 'storage' );
-    }
-
+    /*
     private onStorageChange( e: StorageEvent )
     {
         this.setState( {
             tasks: Task.getTasks()
         } );
     }
+    */
 
     /*
     private onTaskCreateCancel()
@@ -122,7 +124,7 @@ export default class TaskQueue extends React.Component<Props, State>
 
     private onDragStart( dragStart: DragStart )
     {
-
+        // Intentionally left blank
     }
 
     private onDragEnd( result: DropResult )
@@ -133,6 +135,7 @@ export default class TaskQueue extends React.Component<Props, State>
         }
 
         this.reorderTasks( result.source.index, result.destination.index );
+        Task.saveTasks( this.state.tasks );
     }
 
     private reorderTasks( startIndex: number, endIndex: number )

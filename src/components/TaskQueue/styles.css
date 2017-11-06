@@ -14,20 +14,20 @@
     transform: translateX( -50% );
 }
 
-.wrapper
+.task-queue-wrapper
 {
     display: flex;
     flex-direction: column;
     user-select: none;
 }
 
-.drop-zone
+.task-queue-drop-zone
 {
     min-width: 600px;
     display: flex;
 }
 
-.container
+.task-queue-container
 {
     flex-grow: 1;
 
