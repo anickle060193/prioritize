@@ -60,11 +60,16 @@ export default class TaskCard extends React.Component<Props, State>
                                     anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                                     targetOrigin={{ horizontal: 'left', vertical: 'top' }}
                                     onMouseDown={preventDragging}
+                                    onKeyDown={preventDragging}
                                 >
                                     <MenuItem primaryText="Delete" onClick={( e ) => this.onDeleteClick( e )} />
                                 </IconMenu>
                         }
-                        <div className="task-card-edit-form" onMouseDown={preventDragging}>
+                        <div
+                            className="task-card-edit-form"
+                            onMouseDown={preventDragging}
+                            onKeyDown={preventDragging}
+                        >
                             <TextField
                                 type="text"
                                 floatingLabelText="Task Name"
@@ -87,12 +92,14 @@ export default class TaskCard extends React.Component<Props, State>
                                 label="Cancel"
                                 onClick={( e ) => this.onCancel( e )}
                                 onMouseDown={preventDragging}
+                                onKeyDown={preventDragging}
                             />
                             <FlatButton
                                 label={this.props.saveTaskText}
                                 onClick={( e ) => this.onTaskSave( e )}
                                 onMouseDown={preventDragging}
                                 disabled={!this.state.editingTaskName}
+                                onKeyDown={preventDragging}
                             />
                         </CardActions>
                     </Card>
@@ -110,6 +117,7 @@ export default class TaskCard extends React.Component<Props, State>
                                     iconClassName="material-icons"
                                     onClick={( e ) => this.onEditClick( e )}
                                     onMouseDown={preventDragging}
+                                    onKeyDown={preventDragging}
                                 >
                                     edit
                                 </IconButton>
