@@ -85,22 +85,24 @@ export default class TaskCard extends React.Component<Props, State>
         else
         {
             return (
-                <Card className="task-card">
-                    <CardHeader title={this.props.task.name}>
-                        <div className="task-card-edit">
-                            <IconButton
-                                iconClassName="material-icons"
-                                onClick={( e ) => this.onEditClick( e )}
-                                onMouseDown={preventDragging}
-                            >
-                                edit
-                            </IconButton>
-                        </div>
-                    </CardHeader>
-                    <CardText style={{ height: '100%' }}>
-                        {this.props.task.description}
-                    </CardText>
-                </Card>
+                <div className="task-card">
+                    <Card className="task-card-card">
+                        <CardHeader title={this.props.task.name}>
+                            <div className="task-card-edit-button">
+                                <IconButton
+                                    iconClassName="material-icons"
+                                    onClick={( e ) => this.onEditClick( e )}
+                                    onMouseDown={preventDragging}
+                                >
+                                    edit
+                                </IconButton>
+                            </div>
+                        </CardHeader>
+                        <CardText>
+                            {this.props.task.description}
+                        </CardText>
+                    </Card>
+                </div>
             );
         }
     }
