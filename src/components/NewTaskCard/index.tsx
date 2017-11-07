@@ -32,7 +32,7 @@ export default class NewTaskCard extends React.Component<Props, State>
     {
         return (
             <TaskCard
-                initialEditing={true}
+                isNew={true}
                 saveTaskText="Create"
                 task={new Task( '', '', '' )}
                 onTaskEditCancel={() => this.props.onCancel()}

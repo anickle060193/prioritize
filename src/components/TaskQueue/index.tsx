@@ -105,6 +105,7 @@ export default class TaskQueue extends React.Component<Props, State>
                                                 snapshot={dragSnapshot}
                                                 onTaskSave={( t ) => this.onTaskSave( t, i )}
                                                 saveTaskText="Save"
+                                                onTaskDelete={() => this.onTaskDelete( task, i )}
                                             />
                                             {dragProvided.placeholder}
                                         </div>
@@ -148,13 +149,24 @@ export default class TaskQueue extends React.Component<Props, State>
     private onTaskSave( task: Task, taskIndex: number )
     {
         task.save();
-        this.setState( ( prevState, props ) =>
+        this.setState( ( prevState: State, props ) =>
         {
             let tasks = prevState.tasks;
             tasks[ taskIndex ] = task;
             return { tasks };
         } );
         return true;
+    }
+
+    private onTaskDelete( task: Task, taskIndex: number )
+    {
+        task.delete();
+        this.setState( ( prevState: State, props ) =>
+        {
+            let tasks = prevState.tasks;
+            tasks.splice( taskIndex, 1 );
+            return { tasks };
+        } );
     }
 
     private onDragStart( dragStart: DragStart )
