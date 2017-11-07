@@ -4,4 +4,18 @@
     height: 20rem;
     margin: 1rem;
     vertical-align: top;
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.task-card-edit
+{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.task-card-edit-form
+{
+    padding: 0 2rem;
 }

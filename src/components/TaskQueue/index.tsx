@@ -92,14 +92,20 @@ export default class TaskQueue extends React.Component<Props, State>
             <div className="task-queue-container">
                 <div className="task-queue-drop-zone" ref={dropProvided.innerRef}>
                     {
-                        this.state.tasks.map( ( task ) =>
+                        this.state.tasks.map( ( task, i ) =>
                         (
                             <Draggable key={task.id} draggableId={task.id}>
                                 {
                                     ( dragProvided, dragSnapshot ) =>
                                     (
                                         <div>
-                                            <DraggableTaskCard task={task} provided={dragProvided} snapshot={dragSnapshot} />
+                                            <DraggableTaskCard
+                                                task={task}
+                                                provided={dragProvided}
+                                                snapshot={dragSnapshot}
+                                                onTaskSave={( t ) => this.onTaskSave( t, i )}
+                                                saveTaskText="Save"
+                                            />
                                             {dragProvided.placeholder}
                                         </div>
                                     )
@@ -137,6 +143,18 @@ export default class TaskQueue extends React.Component<Props, State>
                 creating: false
             };
         } );
+    }
+
+    private onTaskSave( task: Task, taskIndex: number )
+    {
+        task.save();
+        this.setState( ( prevState, props ) =>
+        {
+            let tasks = prevState.tasks;
+            tasks[ taskIndex ] = task;
+            return { tasks };
+        } );
+        return true;
     }
 
     private onDragStart( dragStart: DragStart )

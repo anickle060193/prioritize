@@ -1,15 +1,10 @@
 import * as React from 'react';
 import { DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd';
 
-import './styles.css';
-
-import TaskCard from 'components/TaskCard';
-
-import Task from 'utilities/task';
+import TaskCard, { Props as TaskCardProps } from 'components/TaskCard';
 
 interface Props
 {
-    task: Task;
     provided: DraggableProvided;
     snapshot: DraggableStateSnapshot;
 }
@@ -18,23 +13,23 @@ interface State
 {
 }
 
-export default class DraggableTaskCard extends React.Component<Props, State>
+export default class DraggableTaskCard extends React.Component<Props & TaskCardProps, State>
 {
-    constructor( props: Props )
+    constructor( props: Props & TaskCardProps )
     {
         super( props );
     }
 
     render()
     {
+        let { provided, snapshot, ...taskCardProps } = this.props;
         return (
             <div
-                ref={( ref ) => this.props.provided.innerRef( ref )}
-                style={this.props.provided.draggableStyle}
-                {...this.props.provided.dragHandleProps}
-                className="draggable-task-card"
+                ref={( ref ) => provided.innerRef( ref )}
+                style={provided.draggableStyle}
+                {...provided.dragHandleProps}
             >
-                <TaskCard task={this.props.task} />
+                <TaskCard {...taskCardProps} />
             </div>
         );
     }

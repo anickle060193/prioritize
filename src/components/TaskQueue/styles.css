@@ -1,3 +1,11 @@
+.new-task-button
+{
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    transform: translateX( -50% );
+}
+
 .task-queue
 {
     padding: 1rem;
@@ -5,14 +13,6 @@
     display: flex;
     flex: auto;
     flex-wrap: nowrap;
-}
-
-.new-task-button
-{
-    position: absolute;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    transform: translateX( -50% );
 }
 
 .task-queue-wrapper
