@@ -4,6 +4,8 @@
     "private": true,
     "homepage": "https://anickle060193.github.io/prioritize",
     "dependencies": {
+        "dexie": "^2.0.1",
+        "dexie-observable": "^1.0.0-beta.4",
         "material-ui": "^0.19.4",
         "react": "^16.0.0",
         "react-beautiful-dnd": "^2.5.0",
@@ -22,6 +24,7 @@
         "deploy": "gh-pages -d build"
     },
     "devDependencies": {
+        "@types/dexie": "^1.3.1",
         "@types/jest": "^21.1.4",
         "@types/material-ui": "^0.18.3",
         "@types/node": "^8.0.46",

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import TaskCard from 'components/TaskCard';
 
-import Task from 'utilities/task';
+import { Task } from 'db/prioritize';
 
 interface Props
 {

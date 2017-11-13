@@ -8,7 +8,7 @@ import TextField from 'material-ui/TextField';
 
 import './styles.css';
 
-import Task from 'utilities/task';
+import { Task } from 'db/prioritize';
 
 export interface Props
 {

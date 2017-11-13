@@ -8,7 +8,7 @@ import './styles.css';
 import NewTaskCard from 'components/NewTaskCard';
 import DraggableTaskCard from 'components/DraggableTaskCard';
 
-import Task from 'utilities/task';
+import db, { Task, Project } from 'db/prioritize';
 
 interface Props
 {
@@ -22,28 +22,35 @@ interface State
 
 export default class TaskQueue extends React.Component<Props, State>
 {
+    private project: Project;
+
     constructor( props: Props )
     {
         super( props );
 
-        let tasks = Task.getTasks();
-
         this.state = {
-            creating: tasks.length === 0,
-            tasks: tasks
+            creating: false,
+            tasks: [ ]
         };
-
-        this.onStorageChange = this.onStorageChange.bind( this );
     }
 
-    componentWillMount()
+    async componentWillMount()
     {
-        window.addEventListener( 'storage', this.onStorageChange );
-    }
+        let project = await db.projects.where( 'name' ).equals( 'Tasks' ).first();
+        if( project )
+        {
+            await project.load();
+        }
+        else
+        {
+            project = new Project( 'Tasks', 'This is a default project.' );
+        }
+        this.project = project;
 
-    componentWillUnmount()
-    {
-        window.removeEventListener( 'storage', this.onStorageChange );
+        this.setState( {
+            tasks: this.project.tasks,
+            creating: this.project.tasks.length === 0
+        } );
     }
 
     render()
@@ -120,52 +127,46 @@ export default class TaskQueue extends React.Component<Props, State>
         );
     }
 
-    private onStorageChange( e: StorageEvent )
-    {
-        this.setState( {
-            tasks: Task.getTasks()
-        } );
-    }
-
     private onTaskCreateCancel()
     {
         this.setState( { creating: false } );
     }
 
-    private onTaskCreate( newTask: Task )
+    private async onTaskCreate( newTask: Task )
     {
-        newTask.save();
-        this.setState( ( prevState, props ) =>
-        {
-            let tasks = prevState.tasks;
-            tasks.splice( 0, 0, newTask );
-            return {
-                tasks: tasks,
-                creating: false
-            };
+        this.project.tasks.splice( 0, 0, newTask );
+        await this.project.save();
+        this.setState( {
+            tasks: this.project.tasks,
+            creating: false
         } );
     }
 
     private onTaskSave( task: Task, taskIndex: number )
     {
-        task.save();
-        this.setState( ( prevState: State, props ) =>
+        if( task.name )
         {
-            let tasks = prevState.tasks;
-            tasks[ taskIndex ] = task;
-            return { tasks };
-        } );
-        return true;
+            this.project.tasks[ taskIndex ] = task;
+            this.project.save().then( () =>
+            {
+                this.setState( { tasks: this.project.tasks } );
+            } );
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    private onTaskDelete( task: Task, taskIndex: number )
+    private async onTaskDelete( task: Task, taskIndex: number )
     {
-        task.delete();
-        this.setState( ( prevState: State, props ) =>
-        {
-            let tasks = prevState.tasks;
-            tasks.splice( taskIndex, 1 );
-            return { tasks };
+        this.project.tasks.splice( taskIndex, 1 );
+        await this.project.save();
+        this.setState( {
+            tasks: this.project.tasks,
+            creating: this.project.tasks.length === 0
         } );
     }
 
@@ -182,14 +183,13 @@ export default class TaskQueue extends React.Component<Props, State>
         }
 
         this.reorderTasks( result.source.index, result.destination.index );
-        Task.saveTasks( this.state.tasks );
     }
 
-    private reorderTasks( startIndex: number, endIndex: number )
+    private async reorderTasks( startIndex: number, endIndex: number )
     {
-        let tasks = this.state.tasks;
-        let [ removed ] = tasks.splice( startIndex, 1 );
-        tasks.splice( endIndex, 0, removed );
-        this.setState( { tasks } );
+        let [ removed ] = this.project.tasks.splice( startIndex, 1 );
+        this.project.tasks.splice( endIndex, 0, removed );
+        await this.project.save();
+        this.setState( { tasks: this.project.tasks } );
     }
 }
