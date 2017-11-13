@@ -8,10 +8,11 @@ import './styles.css';
 import NewTaskCard from 'components/NewTaskCard';
 import DraggableTaskCard from 'components/DraggableTaskCard';
 
-import db, { Task, Project } from 'db/prioritize';
+import { Task, Project } from 'db/prioritize';
 
 interface Props
 {
+    project: Project;
 }
 
 interface State
@@ -20,10 +21,8 @@ interface State
     tasks: Task[];
 }
 
-export default class TaskQueue extends React.Component<Props, State>
+export default class ProjectRow extends React.Component<Props, State>
 {
-    private project: Project;
-
     constructor( props: Props )
     {
         super( props );
@@ -36,20 +35,9 @@ export default class TaskQueue extends React.Component<Props, State>
 
     async componentWillMount()
     {
-        let project = await db.projects.where( 'name' ).equals( 'Tasks' ).first();
-        if( project )
-        {
-            await project.load();
-        }
-        else
-        {
-            project = new Project( 'Tasks', 'This is a default project.' );
-        }
-        this.project = project;
-
         this.setState( {
-            tasks: this.project.tasks,
-            creating: this.project.tasks.length === 0
+            tasks: this.props.project.tasks,
+            creating: this.props.project.tasks.length === 0
         } );
     }
 
@@ -134,10 +122,10 @@ export default class TaskQueue extends React.Component<Props, State>
 
     private async onTaskCreate( newTask: Task )
     {
-        this.project.tasks.splice( 0, 0, newTask );
-        await this.project.save();
+        this.props.project.tasks.splice( 0, 0, newTask );
+        await this.props.project.save();
         this.setState( {
-            tasks: this.project.tasks,
+            tasks: this.props.project.tasks,
             creating: false
         } );
     }
@@ -146,10 +134,10 @@ export default class TaskQueue extends React.Component<Props, State>
     {
         if( task.name )
         {
-            this.project.tasks[ taskIndex ] = task;
-            this.project.save().then( () =>
+            this.props.project.tasks[ taskIndex ] = task;
+            this.props.project.save().then( () =>
             {
-                this.setState( { tasks: this.project.tasks } );
+                this.setState( { tasks: this.props.project.tasks } );
             } );
 
             return true;
@@ -162,11 +150,11 @@ export default class TaskQueue extends React.Component<Props, State>
 
     private async onTaskDelete( task: Task, taskIndex: number )
     {
-        this.project.tasks.splice( taskIndex, 1 );
-        await this.project.save();
+        this.props.project.tasks.splice( taskIndex, 1 );
+        await this.props.project.save();
         this.setState( {
-            tasks: this.project.tasks,
-            creating: this.project.tasks.length === 0
+            tasks: this.props.project.tasks,
+            creating: this.props.project.tasks.length === 0
         } );
     }
 
@@ -187,9 +175,9 @@ export default class TaskQueue extends React.Component<Props, State>
 
     private async reorderTasks( startIndex: number, endIndex: number )
     {
-        let [ removed ] = this.project.tasks.splice( startIndex, 1 );
-        this.project.tasks.splice( endIndex, 0, removed );
-        await this.project.save();
-        this.setState( { tasks: this.project.tasks } );
+        let [ removed ] = this.props.project.tasks.splice( startIndex, 1 );
+        this.props.project.tasks.splice( endIndex, 0, removed );
+        await this.props.project.save();
+        this.setState( { tasks: this.props.project.tasks } );
     }
 }

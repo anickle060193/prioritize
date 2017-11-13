@@ -5,7 +5,7 @@ import darkBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
 import './App.css';
 
-import TaskQueue from 'components/TaskQueue';
+import HomePage from 'components/HomePage';
 
 export default class App extends React.Component
 {
@@ -13,7 +13,7 @@ export default class App extends React.Component
     {
         return (
             <MuiThemeProvider muiTheme={getMuiTheme( darkBaseTheme )}>
-                <TaskQueue />
+                <HomePage />
             </MuiThemeProvider>
         );
     }
