@@ -23,7 +23,7 @@
   "dependencies": {
     "dexie": "^2.0.1",
     "dexie-observable": "^1.0.0-beta.4",
-    "electron-updater": "^2.17.6",
+    "electron-updater": "2.12.0",
     "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-beautiful-dnd": "^2.5.0",
@@ -58,7 +58,7 @@
     "@types/react-tap-event-plugin": "^0.0.30",
     "@types/uuid": "^3.4.3",
     "electron": "^1.7.10",
-    "electron-builder": "^19.49.0",
+    "electron-builder": "19.37.0",
     "env-cmd": "^7.0.0",
     "foreman": "^2.0.0"
   }
