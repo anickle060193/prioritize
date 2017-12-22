@@ -8,7 +8,7 @@
   },
   "private": true,
   "homepage": "./",
-  "main": "./src/electron-starter.js",
+  "main": "./src/main.js",
   "build": {
     "appId": "com.adamnickle.prioritize",
     "productName": "Prioritize",
@@ -23,7 +23,6 @@
   "dependencies": {
     "dexie": "^2.0.1",
     "dexie-observable": "^1.0.0-beta.4",
-    "env-cmd": "^7.0.0",
     "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-beautiful-dnd": "^2.5.0",
@@ -43,7 +42,7 @@
     "react-start": "react-scripts-ts start",
     "pack": "yarn run build && electron-builder --dir",
     "dist": "yarn run build && electron-builder",
-    "release": "yarn run build && env-cmd ./secret.env electron-builder --publish onTag",
+    "release": "yarn run build && env-cmd ./secret.env electron-builder --publish always",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
@@ -59,6 +58,8 @@
     "@types/uuid": "^3.4.3",
     "electron": "^1.7.10",
     "electron-builder": "^19.49.0",
+    "electron-updater": "^2.17.6",
+    "env-cmd": "^7.0.0",
     "foreman": "^2.0.0"
   }
 }
