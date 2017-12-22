@@ -1,6 +1,7 @@
 {
   "name": "prioritize",
   "version": "0.1.0",
+  "description": "A simple task tracking application.",
   "author": {
     "email": "anickle060193@gmail.com",
     "name": "Adam Nickle"
@@ -10,8 +11,10 @@
   "main": "./src/electron-starter.js",
   "build": {
     "appId": "com.adamnickle.prioritize",
+    "productName": "Prioritize",
     "win": {
-      "icon": "./build/icon.ico"
+      "icon": "./build/icon.ico",
+      "publish": "github"
     },
     "directories": {
       "buildResources": "public"
@@ -39,6 +42,7 @@
     "react-start": "react-scripts-ts start",
     "pack": "build --dir",
     "dist": "yarn run build && build",
+    "release": "yarn run build && electron-builder --publish always",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
