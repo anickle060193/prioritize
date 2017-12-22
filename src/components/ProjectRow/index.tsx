@@ -28,17 +28,9 @@ export default class ProjectRow extends React.Component<Props, State>
     super( props );
 
     this.state = {
-      creating: false,
-      tasks: []
+      creating: this.props.project.tasks.length === 0,
+      tasks: this.props.project.tasks
     };
-  }
-
-  async componentWillMount()
-  {
-    this.setState( {
-      tasks: this.props.project.tasks,
-      creating: this.props.project.tasks.length === 0
-    } );
   }
 
   render()
@@ -48,14 +40,14 @@ export default class ProjectRow extends React.Component<Props, State>
         {
           this.state.creating &&
           <NewTaskCard
-            onCancel={() => this.onTaskCreateCancel()}
-            onTaskCreate={( newTask ) => this.onTaskCreate( newTask )}
+            onCancel={this.onTaskCreateCancel}
+            onTaskCreate={this.onTaskCreate}
           />
         }
 
         <DragDropContext
-          onDragStart={( dragStart ) => this.onDragStart( dragStart )}
-          onDragEnd={( result ) => this.onDragEnd( result )}
+          onDragStart={this.onDragStart}
+          onDragEnd={this.onDragEnd}
         >
           <Droppable droppableId="task_queue" direction="horizontal">
             {
@@ -69,8 +61,8 @@ export default class ProjectRow extends React.Component<Props, State>
 
         <FloatingActionButton
           className="new-task-button"
-          onClick={() => this.setState( { creating: true } )}
-          onTouchTap={() => this.setState( { creating: true } )}
+          onClick={this.onStartTaskCreate}
+          onTouchTap={this.onStartTaskCreate}
         >
           <FontIcon className="material-icons">add</FontIcon>
         </FloatingActionButton>
@@ -110,12 +102,17 @@ export default class ProjectRow extends React.Component<Props, State>
     );
   }
 
-  private onTaskCreateCancel()
+  private onStartTaskCreate = () =>
+  {
+    this.setState( { creating: true } );
+  }
+
+  private onTaskCreateCancel = () =>
   {
     this.setState( { creating: false } );
   }
 
-  private async onTaskCreate( newTask: Task )
+  private onTaskCreate = async ( newTask: Task ) =>
   {
     this.props.project.tasks.splice( 0, 0, newTask );
     await this.props.project.save();
@@ -125,7 +122,7 @@ export default class ProjectRow extends React.Component<Props, State>
     } );
   }
 
-  private onTaskSave( task: Task, taskIndex: number )
+  private onTaskSave = ( task: Task, taskIndex: number ) =>
   {
     if( task.name )
     {
@@ -143,7 +140,7 @@ export default class ProjectRow extends React.Component<Props, State>
     }
   }
 
-  private async onTaskDelete( task: Task, taskIndex: number )
+  private onTaskDelete = async ( task: Task, taskIndex: number ) =>
   {
     this.props.project.tasks.splice( taskIndex, 1 );
     await this.props.project.save();
@@ -153,12 +150,12 @@ export default class ProjectRow extends React.Component<Props, State>
     } );
   }
 
-  private onDragStart( dragStart: DragStart )
+  private onDragStart = ( dragStart: DragStart ) =>
   {
     // Intentionally left blank
   }
 
-  private onDragEnd( result: DropResult )
+  private onDragEnd = ( result: DropResult ) =>
   {
     if( !result.destination )
     {

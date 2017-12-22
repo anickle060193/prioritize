@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Card, { CardHeader, CardText, CardActions } from 'material-ui/Card';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
@@ -25,6 +26,7 @@ interface State
   editing: boolean;
   editingTaskName: string;
   editingTaskDescription: string;
+  deleting: boolean;
 }
 
 function preventDragging( e: React.SyntheticEvent<{}> )
@@ -41,30 +43,37 @@ export default class TaskCard extends React.Component<Props, State>
     this.state = {
       editing: !!this.props.isNew,
       editingTaskName: this.props.task.name,
-      editingTaskDescription: this.props.task.description
+      editingTaskDescription: this.props.task.description,
+      deleting: false
     };
   }
 
   render()
   {
+    let deleteConfirmation = (
+      <Dialog
+        modal={false}
+        open={this.state.deleting}
+        onRequestClose={this.onDeleteCancel}
+        actions={[
+          <FlatButton
+            key="yes"
+            label="Yes"
+            style={{ backgroundColor: '#ff3d3d', color: 'white' }}
+            onClick={this.onDeleteConfirmation}
+          />,
+          <FlatButton key="no" label="No" onClick={this.onDeleteCancel} />
+        ]}
+      >
+        Delete "{this.props.task.name}" task?
+      </Dialog>
+    );
+
     if( this.state.editing )
     {
       return (
         <div className="task-card">
-          <Card style={{ position: 'relative' }}>
-            {
-              ( this.props.isNew || !this.props.onTaskDelete ) ? null :
-                <IconMenu
-                  style={{ position: 'absolute', top: 0, right: 0 }}
-                  iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}
-                  anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  onMouseDown={preventDragging}
-                  onKeyDown={preventDragging}
-                >
-                  <MenuItem primaryText="Delete" onClick={( e ) => this.onDeleteClick( e )} />
-                </IconMenu>
-            }
+          <Card className="task-card-card">
             <div
               className="task-card-edit-form"
               onMouseDown={preventDragging}
@@ -74,7 +83,7 @@ export default class TaskCard extends React.Component<Props, State>
                 type="text"
                 floatingLabelText="Task Name"
                 fullWidth={true}
-                onChange={( e ) => this.onEditingTaskNameChange( e )}
+                onChange={this.onEditingTaskNameChange}
                 defaultValue={this.state.editingTaskName}
               />
               <TextField
@@ -83,26 +92,37 @@ export default class TaskCard extends React.Component<Props, State>
                 rows={6}
                 rowsMax={6}
                 fullWidth={true}
-                onChange={( e ) => this.onEditingTaskDescriptionChange( e )}
+                onChange={this.onEditingTaskDescriptionChange}
                 defaultValue={this.state.editingTaskDescription}
               />
             </div>
             <CardActions>
+              {
+                !this.props.isNew &&
+                <FlatButton
+                  label="Delete"
+                  style={{ backgroundColor: '#ff3d3d', color: 'white' }}
+                  onClick={this.onDeleteClick}
+                  onMouseDown={preventDragging}
+                  onKeyDown={preventDragging}
+                />
+              }
               <FlatButton
                 label="Cancel"
-                onClick={( e ) => this.onCancel( e )}
+                onClick={this.onCancel}
                 onMouseDown={preventDragging}
                 onKeyDown={preventDragging}
               />
               <FlatButton
                 label={this.props.saveTaskText}
-                onClick={( e ) => this.onTaskSave( e )}
+                onClick={this.onTaskSave}
                 onMouseDown={preventDragging}
                 disabled={!this.state.editingTaskName}
                 onKeyDown={preventDragging}
               />
             </CardActions>
           </Card>
+          {deleteConfirmation}
         </div>
       );
     }
@@ -113,45 +133,62 @@ export default class TaskCard extends React.Component<Props, State>
           <Card className="task-card-card">
             <CardHeader title={this.props.task.name}>
               <div className="task-card-edit-button">
-                <IconButton
-                  iconClassName="material-icons"
-                  onClick={( e ) => this.onEditClick( e )}
-                  onMouseDown={preventDragging}
-                  onKeyDown={preventDragging}
-                >
-                  edit
-                </IconButton>
+                {
+                  !this.props.isNew &&
+                  <IconMenu
+                    style={{ position: 'absolute', top: 0, right: 0 }}
+                    iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    onMouseDown={preventDragging}
+                    onKeyDown={preventDragging}
+                  >
+                    <MenuItem primaryText="Edit" onClick={this.onEditClick} />
+                    <MenuItem primaryText="Delete" onClick={this.onDeleteClick} />
+                  </IconMenu>
+                }
               </div>
             </CardHeader>
             <CardText>
               {this.props.task.description}
             </CardText>
           </Card>
+          {deleteConfirmation}
         </div>
       );
     }
   }
 
-  private onEditClick( e: React.SyntheticEvent<{}> )
+  private onEditClick = () =>
   {
     this.setState( { editing: true } );
   }
 
-  private onEditingTaskNameChange( e: React.FormEvent<{}> )
+  private onEditingTaskNameChange = ( e: React.FormEvent<HTMLInputElement> ) =>
   {
     this.setState( {
-      editingTaskName: ( e.currentTarget as HTMLInputElement ).value
+      editingTaskName: e.currentTarget.value
     } );
   }
 
-  private onEditingTaskDescriptionChange( e: React.FormEvent<{}> )
+  private onEditingTaskDescriptionChange = ( e: React.FormEvent<HTMLTextAreaElement> ) =>
   {
     this.setState( {
-      editingTaskDescription: ( e.currentTarget as HTMLTextAreaElement ).value
+      editingTaskDescription: e.currentTarget.value
     } );
   }
 
-  private onDeleteClick( e: React.SyntheticEvent<{}> )
+  private onDeleteClick = () =>
+  {
+    this.setState( { deleting: true } );
+  }
+
+  private onDeleteCancel = () =>
+  {
+    this.setState( { deleting: false } );
+  }
+
+  private onDeleteConfirmation = () =>
   {
     if( this.props.onTaskDelete )
     {
@@ -159,7 +196,7 @@ export default class TaskCard extends React.Component<Props, State>
     }
   }
 
-  private onCancel( e: React.SyntheticEvent<{}> )
+  private onCancel = () =>
   {
     if( this.props.onTaskEditCancel )
     {
@@ -168,7 +205,7 @@ export default class TaskCard extends React.Component<Props, State>
     this.setState( { editing: false } );
   }
 
-  private onTaskSave( e: React.SyntheticEvent<{}> )
+  private onTaskSave = () =>
   {
     let { editingTaskName, editingTaskDescription } = this.state;
     let task = new Task( editingTaskName, editingTaskDescription, this.props.task.id );

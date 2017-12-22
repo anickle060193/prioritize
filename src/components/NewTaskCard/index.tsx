@@ -35,13 +35,13 @@ export default class NewTaskCard extends React.Component<Props, State>
         isNew={true}
         saveTaskText="Create"
         task={new Task( '', '', '' )}
-        onTaskEditCancel={() => this.props.onCancel()}
-        onTaskSave={( newTask ) => this.onTaskCreate( newTask )}
+        onTaskEditCancel={this.props.onCancel}
+        onTaskSave={this.onTaskCreate}
       />
     );
   }
 
-  private onTaskCreate( newTask: Task )
+  private onTaskCreate = ( newTask: Task ) =>
   {
     this.props.onTaskCreate( newTask );
     return true;

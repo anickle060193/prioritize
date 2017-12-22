@@ -15,13 +15,6 @@
   height: 100%;
 }
 
-.task-card-edit-button
-{
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
 .task-card-edit-form
 {
   padding: 0 2rem;
