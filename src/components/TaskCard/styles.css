@@ -1,28 +1,28 @@
 .task-card
 {
-    width: 20rem;
-    height: 20rem;
-    margin: 1rem;
-    vertical-align: top;
-    display: inline-flex;
-    align-items: stretch;
-    flex-shrink: 0;
+  width: 20rem;
+  height: 20rem;
+  margin: 1rem;
+  vertical-align: top;
+  display: inline-flex;
+  align-items: stretch;
+  flex-shrink: 0;
 }
 
 .task-card-card
 {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .task-card-edit-button
 {
-    position: absolute;
-    top: 0;
-    right: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .task-card-edit-form
 {
-    padding: 0 2rem;
+  padding: 0 2rem;
 }

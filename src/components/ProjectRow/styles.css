@@ -1,36 +1,36 @@
 .new-task-button
 {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
 }
 
 .task-queue
 {
-    padding: 1rem;
-    padding-bottom: 5rem;
-    display: flex;
-    flex: auto;
-    flex-wrap: nowrap;
+  padding: 1rem;
+  padding-bottom: 5rem;
+  display: flex;
+  flex: auto;
+  flex-wrap: nowrap;
 }
 
 .task-queue-wrapper
 {
-    display: flex;
-    flex-direction: column;
-    user-select: none;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
 }
 
 .task-queue-drop-zone
 {
-    min-width: 600px;
-    display: flex;
+  min-width: 600px;
+  display: flex;
 }
 
 .task-queue-container
 {
-    flex-grow: 1;
+  flex-grow: 1;
 
-    display: inline-flex;
-    flex-direction: column;
+  display: inline-flex;
+  flex-direction: column;
 }

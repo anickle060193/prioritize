@@ -6,44 +6,44 @@ import { Task } from 'db/prioritize';
 
 interface Props
 {
-    onCancel: () => void;
-    onTaskCreate: ( newTask: Task ) => void;
+  onCancel: () => void;
+  onTaskCreate: ( newTask: Task ) => void;
 }
 
 interface State
 {
-    taskName: string;
-    taskDescription: string;
+  taskName: string;
+  taskDescription: string;
 }
 
 export default class NewTaskCard extends React.Component<Props, State>
 {
-    constructor( props: Props )
-    {
-        super( props );
+  constructor( props: Props )
+  {
+    super( props );
 
-        this.state = {
-            taskName: '',
-            taskDescription: ''
-        };
-    }
+    this.state = {
+      taskName: '',
+      taskDescription: ''
+    };
+  }
 
-    render()
-    {
-        return (
-            <TaskCard
-                isNew={true}
-                saveTaskText="Create"
-                task={new Task( '', '', '' )}
-                onTaskEditCancel={() => this.props.onCancel()}
-                onTaskSave={( newTask ) => this.onTaskCreate( newTask )}
-            />
-        );
-    }
+  render()
+  {
+    return (
+      <TaskCard
+        isNew={true}
+        saveTaskText="Create"
+        task={new Task( '', '', '' )}
+        onTaskEditCancel={() => this.props.onCancel()}
+        onTaskSave={( newTask ) => this.onTaskCreate( newTask )}
+      />
+    );
+  }
 
-    private onTaskCreate( newTask: Task )
-    {
-        this.props.onTaskCreate( newTask );
-        return true;
-    }
+  private onTaskCreate( newTask: Task )
+  {
+    this.props.onTaskCreate( newTask );
+    return true;
+  }
 }

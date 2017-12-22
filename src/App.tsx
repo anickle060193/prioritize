@@ -3,18 +3,16 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import darkBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
-import './App.css';
-
 import HomePage from 'components/HomePage';
 
 export default class App extends React.Component
 {
-    render()
-    {
-        return (
-            <MuiThemeProvider muiTheme={getMuiTheme( darkBaseTheme )}>
-                <HomePage />
-            </MuiThemeProvider>
-        );
-    }
+  render()
+  {
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme( darkBaseTheme )}>
+        <HomePage />
+      </MuiThemeProvider>
+    );
+  }
 }
