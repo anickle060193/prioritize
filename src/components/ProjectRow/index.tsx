@@ -46,12 +46,11 @@ export default class ProjectRow extends React.Component<Props, State>
     return (
       <div className="task-queue">
         {
-          this.state.creating ?
-            <NewTaskCard
-              onCancel={() => this.onTaskCreateCancel()}
-              onTaskCreate={( newTask ) => this.onTaskCreate( newTask )}
-            />
-            : null
+          this.state.creating &&
+          <NewTaskCard
+            onCancel={() => this.onTaskCreateCancel()}
+            onTaskCreate={( newTask ) => this.onTaskCreate( newTask )}
+          />
         }
 
         <DragDropContext
@@ -62,9 +61,7 @@ export default class ProjectRow extends React.Component<Props, State>
             {
               ( dropProvided, dropSnapshot ) =>
                 (
-                  <div className="task-queue-wrapper">
-                    {this.renderList( dropProvided )}
-                  </div>
+                  this.renderList( dropProvided )
                 )
             }
           </Droppable>
@@ -84,33 +81,31 @@ export default class ProjectRow extends React.Component<Props, State>
   private renderList( dropProvided: DroppableProvided )
   {
     return (
-      <div className="task-queue-container">
-        <div className="task-queue-drop-zone" ref={dropProvided.innerRef}>
-          {
-            this.state.tasks.map( ( task, i ) =>
-              (
-                <Draggable key={task.id} draggableId={task.id}>
-                  {
-                    ( dragProvided, dragSnapshot ) =>
-                      (
-                        <div>
-                          <DraggableTaskCard
-                            task={task}
-                            provided={dragProvided}
-                            snapshot={dragSnapshot}
-                            onTaskSave={( t ) => this.onTaskSave( t, i )}
-                            saveTaskText="Save"
-                            onTaskDelete={() => this.onTaskDelete( task, i )}
-                          />
-                          {dragProvided.placeholder}
-                        </div>
-                      )
-                  }
-                </Draggable>
-              ) )
-          }
-          {dropProvided.placeholder}
-        </div>
+      <div className="task-queue-container" ref={dropProvided.innerRef}>
+        {
+          this.state.tasks.map( ( task, i ) =>
+            (
+              <Draggable key={task.id} draggableId={task.id}>
+                {
+                  ( dragProvided, dragSnapshot ) =>
+                    (
+                      <div>
+                        <DraggableTaskCard
+                          task={task}
+                          provided={dragProvided}
+                          snapshot={dragSnapshot}
+                          onTaskSave={( t ) => this.onTaskSave( t, i )}
+                          saveTaskText="Save"
+                          onTaskDelete={() => this.onTaskDelete( task, i )}
+                        />
+                        {dragProvided.placeholder}
+                      </div>
+                    )
+                }
+              </Draggable>
+            ) )
+        }
+        {dropProvided.placeholder}
       </div>
     );
   }

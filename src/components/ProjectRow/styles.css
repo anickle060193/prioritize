@@ -9,28 +9,12 @@
 {
   padding: 1rem;
   padding-bottom: 5rem;
-  display: flex;
-  flex: auto;
-  flex-wrap: nowrap;
-}
-
-.task-queue-wrapper
-{
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-}
-
-.task-queue-drop-zone
-{
-  min-width: 600px;
-  display: flex;
+  display: inline-flex;
+  flex-direction: row;
 }
 
 .task-queue-container
 {
-  flex-grow: 1;
-
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
 }
