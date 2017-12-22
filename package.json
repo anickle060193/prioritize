@@ -23,6 +23,7 @@
   "dependencies": {
     "dexie": "^2.0.1",
     "dexie-observable": "^1.0.0-beta.4",
+    "env-cmd": "^7.0.0",
     "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-beautiful-dnd": "^2.5.0",
@@ -40,9 +41,9 @@
     "electron": "electron .",
     "electron-start": "node src/electron-wait-react",
     "react-start": "react-scripts-ts start",
-    "pack": "build --dir",
-    "dist": "yarn run build && build",
-    "release": "yarn run build && electron-builder --publish always",
+    "pack": "yarn run build && electron-builder --dir",
+    "dist": "yarn run build && electron-builder",
+    "release": "yarn run build && env-cmd ./secret.env electron-builder --publish onTag",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
