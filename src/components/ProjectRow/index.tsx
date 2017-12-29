@@ -1,13 +1,7 @@
 import * as React from 'react';
-import
-{
-  DragDropContext,
-  DragStart,
-  DropResult,
-  Droppable,
-  DroppableProvided,
-  Draggable
-} from 'react-beautiful-dnd';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import FontIcon from 'material-ui/FontIcon';
+import { DragDropContext, DragStart, DropResult, Droppable, DroppableProvided, Draggable } from 'react-beautiful-dnd';
 
 import './styles.css';
 
@@ -65,14 +59,13 @@ export default class ProjectRow extends React.Component<Props, State>
           </Droppable>
         </DragDropContext>
 
-        <div className="fixed-action-btn">
-          <a
-            className="btn-floating btn-large"
-            onClick={this.onStartTaskCreate}
-          >
-            <i className="large material-icons">add</i>
-          </a>
-        </div>
+        <FloatingActionButton
+          className="new-task-button"
+          onClick={this.onStartTaskCreate}
+          onTouchTap={this.onStartTaskCreate}
+        >
+          <FontIcon className="material-icons">add</FontIcon>
+        </FloatingActionButton>
       </div>
     );
   }

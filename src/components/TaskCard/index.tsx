@@ -1,6 +1,11 @@
 import * as React from 'react';
-import * as $ from 'jquery';
-import * as Materialize from 'materialize-css';
+import Card, { CardHeader, CardText, CardActions } from 'material-ui/Card';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
 
 import './styles.css';
 
@@ -21,6 +26,7 @@ interface State
   editing: boolean;
   editingTaskName: string;
   editingTaskDescription: string;
+  deleting: boolean;
 }
 
 function preventDragging( e: React.SyntheticEvent<{}> )
@@ -38,124 +44,119 @@ export default class TaskCard extends React.Component<Props, State>
       editing: !!this.props.isNew,
       editingTaskName: this.props.task.name,
       editingTaskDescription: this.props.task.description,
+      deleting: false
     };
-  }
-
-  componentDidMount()
-  {
-    this.initialize();
-  }
-
-  componentDidUpdate()
-  {
-    this.initialize();
   }
 
   render()
   {
+    let deleteConfirmation = (
+      <Dialog
+        modal={false}
+        open={this.state.deleting}
+        onRequestClose={this.onDeleteCancel}
+        actions={[
+          <FlatButton
+            key="yes"
+            label="Yes"
+            style={{ backgroundColor: '#ff3d3d', color: 'white' }}
+            onClick={this.onDeleteConfirmation}
+          />,
+          <FlatButton key="no" label="No" onClick={this.onDeleteCancel} />
+        ]}
+      >
+        Delete "{this.props.task.name}" task?
+      </Dialog>
+    );
+
     if( this.state.editing )
     {
       return (
-        <div className="card task-card">
-          <div className="card-content">
-            <div className="input-field">
-              <label>Task name</label>
-              <input
+        <div className="task-card">
+          <Card className="task-card-card">
+            <div
+              className="task-card-edit-form"
+              onMouseDown={preventDragging}
+              onKeyDown={preventDragging}
+            >
+              <TextField
                 type="text"
-                className="text-name-input"
-                autoFocus={true}
-                defaultValue={this.state.editingTaskName}
+                floatingLabelText="Task Name"
+                fullWidth={true}
                 onChange={this.onEditingTaskNameChange}
-                onMouseDown={preventDragging}
-                onKeyDown={preventDragging}
+                defaultValue={this.state.editingTaskName}
               />
-            </div>
-            <div className="input-field">
-              <label>Task Description</label>
-              <textarea
-                className="materialize-textarea"
-                defaultValue={this.state.editingTaskDescription}
+              <TextField
+                floatingLabelText="Task Description"
+                multiLine={true}
+                rows={6}
+                rowsMax={6}
+                fullWidth={true}
                 onChange={this.onEditingTaskDescriptionChange}
+                defaultValue={this.state.editingTaskDescription}
+              />
+            </div>
+            <CardActions>
+              {
+                !this.props.isNew &&
+                <FlatButton
+                  label="Delete"
+                  style={{ backgroundColor: '#ff3d3d', color: 'white' }}
+                  onClick={this.onDeleteClick}
+                  onMouseDown={preventDragging}
+                  onKeyDown={preventDragging}
+                />
+              }
+              <FlatButton
+                label="Cancel"
+                onClick={this.onCancel}
                 onMouseDown={preventDragging}
                 onKeyDown={preventDragging}
               />
-            </div>
-          </div>
-          <div className="card-action">
-            {
-              !this.props.isNew &&
-              <a
-                href="#"
-                onClick={this.onDeleteClick}
+              <FlatButton
+                label={this.props.saveTaskText}
+                onClick={this.onTaskSave}
                 onMouseDown={preventDragging}
+                disabled={!this.state.editingTaskName}
                 onKeyDown={preventDragging}
-              >
-                Delete
-              </a>
-            }
-            <a
-              href="#"
-              onClick={this.onCancel}
-              onMouseDown={preventDragging}
-              onKeyDown={preventDragging}
-            >
-              Cancel
-            </a>
-            <a
-              href="#"
-              className={!this.state.editingTaskName ? 'disabled' : ''}
-              onClick={this.onTaskSave}
-              onMouseDown={preventDragging}
-              onKeyDown={preventDragging}
-            >
-              {this.props.saveTaskText}
-            </a>
-          </div>
+              />
+            </CardActions>
+          </Card>
+          {deleteConfirmation}
         </div>
       );
     }
     else
     {
       return (
-        <div className="task-card card">
-          <div className="card-content">
-            <span className="card-title">{this.props.task.name}</span>
-            {
-              !this.props.isNew &&
-              (
-                <div className="task-dropdown-menu">
-                  <a
-                    href="#"
-                    className="waves-effect icon-button"
-                    data-dropdown="inactive"
-                    data-alignment="right"
-                    data-activates={`menu-${this.props.task.id}`}
-                    data-stoppropagation={true}
+        <div className="task-card">
+          <Card className="task-card-card">
+            <CardHeader title={this.props.task.name}>
+              <div className="task-card-edit-button">
+                {
+                  !this.props.isNew &&
+                  <IconMenu
+                    style={{ position: 'absolute', top: 0, right: 0 }}
+                    iconButtonElement={<IconButton iconClassName="material-icons">more_vert</IconButton>}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
                     onMouseDown={preventDragging}
                     onKeyDown={preventDragging}
                   >
-                    <span className="material-icons">more_vert</span>
-                  </a>
-                  <ul id={`menu-${this.props.task.id}`} className="dropdown-content">
-                    <li><a href="#" onClick={this.onEditClick}>Edit</a></li>
-                    <li><a href="#" onClick={this.onDeleteClick}>Delete</a></li>
-                  </ul>
-                </div>
-              )
-            }
-            <p>
+                    <MenuItem primaryText="Edit" onClick={this.onEditClick} />
+                    <MenuItem primaryText="Delete" onClick={this.onDeleteClick} />
+                  </IconMenu>
+                }
+              </div>
+            </CardHeader>
+            <CardText>
               {this.props.task.description}
-            </p>
-          </div>
-        </div >
+            </CardText>
+          </Card>
+          {deleteConfirmation}
+        </div>
       );
     }
-  }
-
-  private initialize()
-  {
-    $( '[data-dropdown="inactive"]' ).attr( 'data-dropdown', 'active' ).dropdown();
-    Materialize.updateTextFields();
   }
 
   private onEditClick = () =>
@@ -179,6 +180,16 @@ export default class TaskCard extends React.Component<Props, State>
 
   private onDeleteClick = () =>
   {
+    this.setState( { deleting: true } );
+  }
+
+  private onDeleteCancel = () =>
+  {
+    this.setState( { deleting: false } );
+  }
+
+  private onDeleteConfirmation = () =>
+  {
     if( this.props.onTaskDelete )
     {
       this.props.onTaskDelete();
@@ -197,13 +208,10 @@ export default class TaskCard extends React.Component<Props, State>
   private onTaskSave = () =>
   {
     let { editingTaskName, editingTaskDescription } = this.state;
-    if( editingTaskName )
+    let task = new Task( editingTaskName, editingTaskDescription, this.props.task.id );
+    if( this.props.onTaskSave( task ) )
     {
-      let task = new Task( editingTaskName, editingTaskDescription, this.props.task.id );
-      if( this.props.onTaskSave( task ) )
-      {
-        this.setState( { editing: false } );
-      }
+      this.setState( { editing: false } );
     }
   }
 }
