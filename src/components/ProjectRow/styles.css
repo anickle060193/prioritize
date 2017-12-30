@@ -3,6 +3,17 @@
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+}
+
+.horizontal .project-row
+{
+  padding-right: 0;
+}
+
+.vertical .project-row
+{
+  padding-bottom: 0;
 }
 
 .project-row-header
@@ -25,6 +36,12 @@
 {
   display: flex;
   flex-direction: row;
+  flex: 1;
+}
+
+.horizontal .project-tasks
+{
+  overflow-x: auto;
 }
 
 .vertical .project-tasks,
@@ -32,4 +49,10 @@
 {
   display: flex;
   flex-direction: column;
+  flex: 1;
+}
+
+.vertical .project-tasks
+{
+  overflow-y: auto;
 }
