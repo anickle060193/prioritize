@@ -36,7 +36,7 @@ export default class ProjectDialog extends React.PureComponent<Props, State>
 
   componentWillReceiveProps( nextProps: Props )
   {
-    if( nextProps.projectName !== this.props.projectName )
+    if( nextProps.projectName !== this.props.projectName || nextProps.open !== this.props.open )
     {
       this.setState( { projectName: nextProps.projectName } );
     }
