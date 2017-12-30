@@ -1,13 +1,16 @@
 import * as React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import AppBar from 'material-ui/AppBar';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import { MenuItem } from 'material-ui/Menu';
+import Divider from 'material-ui/Divider';
 
 import ProjectDialog from 'components/ProjectDialog';
 import ProjectRow from 'components/ProjectRow';
 
 import db, { Project } from 'db/prioritize';
+import Settings from 'utils/settings';
 
 import './styles.css';
 
@@ -29,7 +32,7 @@ export default class HomePage extends React.Component<Props, State>
     this.state = {
       projects: [],
       creatingProject: false,
-      horizontal: true
+      horizontal: Settings.projectHorizontal
     };
   }
 
@@ -40,44 +43,53 @@ export default class HomePage extends React.Component<Props, State>
 
   render()
   {
-    let orientationIconButton = null;
-    if( this.state.horizontal )
-    {
-      orientationIconButton = (
-        <IconButton
-          onClick={this.toggleOrientation}
-          tooltip="Vertical"
+    let appBarMenu = (
+      <IconMenu
+        iconButtonElement={
+          <IconButton>
+            <FontIcon color="white" className="material-icons">more_vert</FontIcon>
+          </IconButton>
+        }
+        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+      >
+        <MenuItem
+          leftIcon={
+            <FontIcon className="material-icons">add</FontIcon>
+          }
+          onClick={this.onStartProjectCreate}
         >
-          <FontIcon className="material-icons">swap_vert</FontIcon>
-        </IconButton>
-      );
-    }
-    else
-    {
-      orientationIconButton = (
-        <IconButton
-          onClick={this.toggleOrientation}
-          tooltip="Horizontal"
-        >
-          <FontIcon className="material-icons">swap_horiz</FontIcon>
-        </IconButton>
-      );
-    }
+          New Project
+        </MenuItem>
+        <Divider />
+        {
+          !this.state.horizontal &&
+          <MenuItem
+            leftIcon={<FontIcon className="material-icons">swap_horiz</FontIcon>}
+            onClick={() => this.setHorizontal( true )}
+          >
+            Horizontal
+          </MenuItem>
+        }
+        {
+          this.state.horizontal &&
+          <MenuItem
+            leftIcon={<FontIcon className="material-icons">swap_vert</FontIcon>}
+            onClick={() => this.setHorizontal( false )}
+          >
+            Vertical
+          </MenuItem>
+        }
+      </IconMenu>
+    );
 
     return (
       <div className={this.state.horizontal ? 'horizontal' : 'vertical'}>
         <AppBar
           title="Prioritize"
           showMenuIconButton={false}
-          iconElementRight={orientationIconButton}
+          iconElementRight={appBarMenu}
         />
-
-        <FloatingActionButton
-          className="new-project-button"
-          onClick={this.onStartProjectCreate}
-        >
-          <FontIcon className="material-icons">add</FontIcon>
-        </FloatingActionButton>
 
         <div className="projects">
           {this.state.projects.map( ( project ) =>
@@ -105,12 +117,10 @@ export default class HomePage extends React.Component<Props, State>
     );
   }
 
-  private toggleOrientation = () =>
+  private setHorizontal( horizontal: boolean )
   {
-    this.setState( ( prevState: State ) =>
-    {
-      return { horizontal: !prevState.horizontal };
-    } );
+    Settings.projectHorizontal = horizontal;
+    this.setState( { horizontal: horizontal } );
   }
 
   private async updateProjects()
