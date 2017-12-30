@@ -1,6 +1,8 @@
 import * as React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import AppBar from 'material-ui/AppBar';
 import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
 import ProjectDialog from 'components/ProjectDialog';
 import ProjectRow from 'components/ProjectRow';
@@ -15,6 +17,7 @@ interface State
 {
   projects: Project[];
   creatingProject: boolean;
+  horizontal: boolean;
 }
 
 export default class HomePage extends React.Component<Props, State>
@@ -25,7 +28,8 @@ export default class HomePage extends React.Component<Props, State>
 
     this.state = {
       projects: [],
-      creatingProject: false
+      creatingProject: false,
+      horizontal: true
     };
   }
 
@@ -36,17 +40,37 @@ export default class HomePage extends React.Component<Props, State>
 
   render()
   {
+    let orientationIconButton = null;
+    if( this.state.horizontal )
+    {
+      orientationIconButton = (
+        <IconButton
+          onClick={this.toggleOrientation}
+          tooltip="Vertical"
+        >
+          <FontIcon className="material-icons">swap_vert</FontIcon>
+        </IconButton>
+      );
+    }
+    else
+    {
+      orientationIconButton = (
+        <IconButton
+          onClick={this.toggleOrientation}
+          tooltip="Horizontal"
+        >
+          <FontIcon className="material-icons">swap_horiz</FontIcon>
+        </IconButton>
+      );
+    }
+
     return (
-      <div>
-        {this.state.projects.map( ( project ) =>
-          (
-            <ProjectRow
-              key={project.id}
-              project={project}
-              onProjectEdit={( newProjectName ) => this.onProjectEdit( project, newProjectName )}
-              onProjectDelete={() => this.onProjectDelete( project )}
-            />
-          ) )}
+      <div className={this.state.horizontal ? 'horizontal' : 'vertical'}>
+        <AppBar
+          title="Prioritize"
+          showMenuIconButton={false}
+          iconElementRight={orientationIconButton}
+        />
 
         <FloatingActionButton
           className="new-project-button"
@@ -55,17 +79,38 @@ export default class HomePage extends React.Component<Props, State>
           <FontIcon className="material-icons">add</FontIcon>
         </FloatingActionButton>
 
-        <ProjectDialog
-          open={this.state.creatingProject}
-          projectName=""
-          onCancel={this.onProjectCreateCancel}
-          onSubmit={this.onProjectCreate}
-          submitLabel="Create Project"
-          title="New Project"
-        />
+        <div className="projects">
+          {this.state.projects.map( ( project ) =>
+            (
+              <ProjectRow
+                key={project.id}
+                project={project}
+                onProjectEdit={( newProjectName ) => this.onProjectEdit( project, newProjectName )}
+                onProjectDelete={() => this.onProjectDelete( project )}
+                horizontal={this.state.horizontal}
+              />
+            ) )}
 
+          <ProjectDialog
+            open={this.state.creatingProject}
+            projectName=""
+            onCancel={this.onProjectCreateCancel}
+            onSubmit={this.onProjectCreate}
+            submitLabel="Create Project"
+            title="New Project"
+          />
+
+        </div>
       </div>
     );
+  }
+
+  private toggleOrientation = () =>
+  {
+    this.setState( ( prevState: State ) =>
+    {
+      return { horizontal: !prevState.horizontal };
+    } );
   }
 
   private async updateProjects()

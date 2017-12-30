@@ -24,6 +24,7 @@ interface Props
   project: Project;
   onProjectEdit: ( projectName: string ) => void;
   onProjectDelete: () => void;
+  horizontal: boolean;
 }
 
 interface State
@@ -76,7 +77,10 @@ export default class ProjectRow extends React.Component<Props, State>
             onDragStart={this.onDragStart}
             onDragEnd={this.onDragEnd}
           >
-            <Droppable droppableId="task_queue" direction="horizontal">
+            <Droppable
+              droppableId="task_queue"
+              direction={this.props.horizontal ? 'horizontal' : 'vertical'}
+            >
               {
                 ( dropProvided, dropSnapshot ) =>
                   (

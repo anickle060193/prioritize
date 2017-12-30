@@ -20,14 +20,16 @@
   font-weight: normal;
 }
 
-.project-tasks
+.horizontal .project-tasks,
+.horizontal .project-tasks-drop-zone
 {
   display: flex;
   flex-direction: row;
 }
 
-.project-tasks-drop-zone
+.vertical .project-tasks,
+.vertical .project-tasks-drop-zone
 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
