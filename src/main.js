@@ -3,6 +3,15 @@ const { autoUpdater } = require( 'electron-updater' );
 const path = require( 'path' );
 const url = require( 'url' );
 
+const ELECTRON_START_URL = process.env.NODE_ENV === 'production' ?
+  url.format( {
+    pathname: path.join( __dirname, '/../build/index.html' ),
+    protocol: 'file',
+    slashes: true
+  } )
+  :
+  'http://localhost:3000';
+
 let window;
 
 function createWindow()
@@ -14,14 +23,7 @@ function createWindow()
     backgroundColor: "#f5f5f5"
   } );
 
-  window.loadURL(
-    process.env.ELECTRON_START_URL ||
-    url.format( {
-      pathname: path.join( __dirname, '/../build/index.html' ),
-      protocol: 'file',
-      slashes: true
-    } )
-  );
+  window.loadURL( ELECTRON_START_URL );
 
   window.on( 'closed', () =>
   {

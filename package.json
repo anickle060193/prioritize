@@ -21,12 +21,11 @@
     }
   },
   "scripts": {
-    "start": "nf start -p 3000",
+    "start": "concurrently -k -p \"[{name}]\" -n \"REACT,ELECTRON\" -c \"magenta.bold,blue.bold\"  \"yarn run react-start\" \"wait-on http-get://localhost:3000/ && yarn run electron-start\"",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
-    "electron": "electron .",
-    "electron-start": "node src/electron-wait-react",
+    "electron-start": "electron .",
     "react-start": "react-scripts-ts start",
     "pack": "yarn run build && electron-builder --dir",
     "dist": "yarn run build && electron-builder",
@@ -36,7 +35,7 @@
   "dependencies": {
     "dexie": "^2.0.1",
     "dexie-observable": "^1.0.0-beta.4",
-    "electron-updater": "2.12.0",
+    "electron-updater": "2.17.7",
     "material-ui": "^0.19.4",
     "react": "^16.0.0",
     "react-beautiful-dnd": "^2.5.0",
@@ -57,9 +56,10 @@
     "@types/react-router-dom": "^4.2.0",
     "@types/react-tap-event-plugin": "^0.0.30",
     "@types/uuid": "^3.4.3",
+    "concurrently": "^3.5.1",
     "electron": "^1.7.10",
-    "electron-builder": "19.37.0",
+    "electron-builder": "^19.49.4",
     "env-cmd": "^7.0.0",
-    "foreman": "^2.0.0"
+    "wait-on": "^2.0.2"
   }
 }
