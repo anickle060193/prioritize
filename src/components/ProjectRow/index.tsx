@@ -1,24 +1,36 @@
 import * as React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import
+{
+  DragDropContext,
+  DragStart,
+  DropResult,
+  Droppable,
+  DroppableProvided,
+  Draggable
+} from 'react-beautiful-dnd';
 import FontIcon from 'material-ui/FontIcon';
-import { DragDropContext, DragStart, DropResult, Droppable, DroppableProvided, Draggable } from 'react-beautiful-dnd';
+import IconButton from 'material-ui/IconButton';
 
 import './styles.css';
 
 import NewTaskCard from 'components/NewTaskCard';
 import DraggableTaskCard from 'components/DraggableTaskCard';
+import ProjectDialog from 'components/ProjectDialog';
 
 import { Task, Project } from 'db/prioritize';
 
 interface Props
 {
   project: Project;
+  onProjectEdit: ( projectName: string ) => void;
+  onProjectDelete: () => void;
 }
 
 interface State
 {
-  creating: boolean;
+  creatingTask: boolean;
   tasks: Task[];
+  editingProject: boolean;
 }
 
 export default class ProjectRow extends React.Component<Props, State>
@@ -28,44 +40,63 @@ export default class ProjectRow extends React.Component<Props, State>
     super( props );
 
     this.state = {
-      creating: this.props.project.tasks.length === 0,
-      tasks: this.props.project.tasks
+      creatingTask: this.props.project.tasks.length === 0,
+      tasks: this.props.project.tasks,
+      editingProject: false
     };
   }
 
   render()
   {
     return (
-      <div className="task-queue">
-        {
-          this.state.creating &&
-          <NewTaskCard
-            onCancel={this.onTaskCreateCancel}
-            onTaskCreate={this.onTaskCreate}
-          />
-        }
+      <div className="project-row">
 
-        <DragDropContext
-          onDragStart={this.onDragStart}
-          onDragEnd={this.onDragEnd}
-        >
-          <Droppable droppableId="task_queue" direction="horizontal">
-            {
-              ( dropProvided, dropSnapshot ) =>
-                (
-                  this.renderList( dropProvided )
-                )
-            }
-          </Droppable>
-        </DragDropContext>
+        <div className="project-row-header">
+          <h1 className="project-name">{this.props.project.name}</h1>
 
-        <FloatingActionButton
-          className="new-task-button"
-          onClick={this.onStartTaskCreate}
-          onTouchTap={this.onStartTaskCreate}
-        >
-          <FontIcon className="material-icons">add</FontIcon>
-        </FloatingActionButton>
+          <IconButton tooltip="Edit Project" onClick={this.onStartProjectEdit}>
+            <FontIcon className="material-icons">mode_edit</FontIcon>
+          </IconButton>
+
+          <IconButton tooltip="New Task" onClick={this.onStartTaskCreate}>
+            <FontIcon className="material-icons">add</FontIcon>
+          </IconButton>
+        </div>
+
+        <div className="project-tasks">
+          {
+            this.state.creatingTask &&
+            <NewTaskCard
+              onCancel={this.onTaskCreateCancel}
+              onTaskCreate={this.onTaskCreate}
+            />
+          }
+
+          <DragDropContext
+            onDragStart={this.onDragStart}
+            onDragEnd={this.onDragEnd}
+          >
+            <Droppable droppableId="task_queue" direction="horizontal">
+              {
+                ( dropProvided, dropSnapshot ) =>
+                  (
+                    this.renderList( dropProvided )
+                  )
+              }
+            </Droppable>
+          </DragDropContext>
+        </div>
+
+        <ProjectDialog
+          open={this.state.editingProject}
+          projectName={this.props.project.name}
+          onCancel={this.onProjectEditCancel}
+          onSubmit={this.onProjectEdit}
+          onDelete={this.onProjectDelete}
+          submitLabel="Update Project"
+          title="Edit Project"
+        />
+
       </div>
     );
   }
@@ -73,7 +104,7 @@ export default class ProjectRow extends React.Component<Props, State>
   private renderList( dropProvided: DroppableProvided )
   {
     return (
-      <div className="task-queue-container" ref={dropProvided.innerRef}>
+      <div className="project-tasks-drop-zone" ref={dropProvided.innerRef}>
         {
           this.state.tasks.map( ( task, i ) =>
             (
@@ -102,14 +133,36 @@ export default class ProjectRow extends React.Component<Props, State>
     );
   }
 
+  private onStartProjectEdit = () =>
+  {
+    this.setState( { editingProject: true } );
+  }
+
+  private onProjectEditCancel = () =>
+  {
+    this.setState( { editingProject: false } );
+  }
+
+  private onProjectEdit = ( projectName: string ) =>
+  {
+    this.props.onProjectEdit( projectName );
+    this.setState( { editingProject: false } );
+  }
+
+  private onProjectDelete = () =>
+  {
+    this.props.onProjectDelete();
+    this.setState( { editingProject: false } );
+  }
+
   private onStartTaskCreate = () =>
   {
-    this.setState( { creating: true } );
+    this.setState( { creatingTask: true } );
   }
 
   private onTaskCreateCancel = () =>
   {
-    this.setState( { creating: false } );
+    this.setState( { creatingTask: false } );
   }
 
   private onTaskCreate = async ( newTask: Task ) =>
@@ -118,7 +171,7 @@ export default class ProjectRow extends React.Component<Props, State>
     await this.props.project.save();
     this.setState( {
       tasks: this.props.project.tasks,
-      creating: false
+      creatingTask: false
     } );
   }
 
@@ -146,7 +199,7 @@ export default class ProjectRow extends React.Component<Props, State>
     await this.props.project.save();
     this.setState( {
       tasks: this.props.project.tasks,
-      creating: this.props.project.tasks.length === 0
+      creatingTask: this.props.project.tasks.length === 0
     } );
   }
 

@@ -1,20 +1,33 @@
-.new-task-button
-{
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-}
-
-.task-queue
+.project-row
 {
   padding: 0.5rem;
-  padding-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-row-header
+{
   display: inline-flex;
   flex-direction: row;
 }
 
-.task-queue-container
+.project-name
 {
-  display: inline-flex;
+  padding: 0;
+  margin: 0 0.5rem 0.25rem 0.5rem;
+
+  font-size: 26pt;
+  font-weight: normal;
+}
+
+.project-tasks
+{
+  display: flex;
+  flex-direction: row;
+}
+
+.project-tasks-drop-zone
+{
+  display: flex;
   flex-direction: row;
 }
