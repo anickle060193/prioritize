@@ -1,12 +1,16 @@
 .task-card
 {
   width: 20rem;
-  height: 20rem;
   margin: 0.5rem;
   vertical-align: top;
   display: inline-flex;
   align-items: stretch;
   flex-shrink: 0;
+}
+
+.task-card.editing
+{
+  height: 20rem;
 }
 
 .task-card-card

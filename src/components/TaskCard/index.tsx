@@ -72,7 +72,7 @@ export default class TaskCard extends React.Component<Props, State>
     if( this.state.editing )
     {
       return (
-        <div className="task-card">
+        <div className="task-card editing">
           <Card className="task-card-card">
             <div
               className="task-card-edit-form"
