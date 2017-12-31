@@ -72,7 +72,7 @@ export default class TaskCard extends React.Component<Props, State>
     if( this.state.editing )
     {
       return (
-        <div className="task-card editing">
+        <div className="task-card">
           <Card className="task-card-card">
             <div
               className="task-card-edit-form"
@@ -89,7 +89,6 @@ export default class TaskCard extends React.Component<Props, State>
               <TextField
                 floatingLabelText="Task Description"
                 multiLine={true}
-                rows={6}
                 rowsMax={6}
                 fullWidth={true}
                 onChange={this.onEditingTaskDescriptionChange}
@@ -149,7 +148,7 @@ export default class TaskCard extends React.Component<Props, State>
                 }
               </div>
             </CardHeader>
-            <CardText>
+            <CardText style={{ whiteSpace: 'pre-line', paddingTop: 0 }}>
               {this.props.task.description}
             </CardText>
           </Card>
