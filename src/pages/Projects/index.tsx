@@ -23,7 +23,7 @@ interface State
   horizontal: boolean;
 }
 
-export default class HomePage extends React.Component<Props, State>
+export default class Projects extends React.Component<Props, State>
 {
   constructor( props: Props )
   {
